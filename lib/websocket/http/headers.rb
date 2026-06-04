@@ -2,7 +2,7 @@ module WebSocket
   module HTTP
 
     module Headers
-      MAX_LINE_LENGTH = 4096
+      MAX_REQUEST_SIZE = 32768
       CR = 0x0D
       LF = 0x0A
 
@@ -38,6 +38,7 @@ module WebSocket
       attr_reader :headers
 
       def initialize
+        @size    = 0
         @buffer  = []
         @env     = {}
         @headers = {}
@@ -54,6 +55,9 @@ module WebSocket
 
       def parse(chunk)
         chunk.each_byte do |octet|
+          @size += 1
+          return error if @size > MAX_REQUEST_SIZE
+
           if octet == LF and @stage < 2
             @buffer.pop if @buffer.last == CR
             if @buffer.empty?
@@ -71,9 +75,8 @@ module WebSocket
               end
             end
             @buffer = []
-          else
-            @buffer << octet if @stage >= 0
-            error if @stage < 2 and @buffer.size > MAX_LINE_LENGTH
+          elsif @stage >= 0
+            @buffer << octet
           end
         end
         @env['rack.input'] = StringIO.new(string_buffer)
