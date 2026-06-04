@@ -41,6 +41,7 @@ module WebSocket
 
             when 1 then
               @length = (octet & 0x7F) + 128 * @length
+              return close if @length > @max_length
 
               if @closing and @length.zero?
                 return close
