@@ -400,6 +400,10 @@ module WebSocket
 
         payload = message.data
 
+        if payload.bytesize > @max_length
+          return fail(:too_large, 'WebSocket frame length too large')
+        end
+
         case message.opcode
           when OPCODES[:text] then
             payload = Driver.encode(payload, Encoding::UTF_8)
