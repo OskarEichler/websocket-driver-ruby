@@ -1,3 +1,11 @@
+### 0.8.1 / 2026-06-04
+
+- Close a draft-75/76 connection if a length header grows to exceed the
+  configured max length
+- Fail the connection if a message is larger than the configured max length
+  after extension processing
+- Limit the total HTTP request line and headers size to 32K
+
 ### 0.8.0 / 2025-05-25
 
 - Emit binary message as a string with `Encoding::BINARY` instead of an array
