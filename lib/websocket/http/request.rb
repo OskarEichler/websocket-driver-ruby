@@ -33,11 +33,18 @@ module WebSocket
           rack_name = "HTTP_#{ rack_name }" unless RESERVED_HEADERS.include?(name)
           @env[rack_name] = value
         end
-        if host = @env['HTTP_HOST']
-          uri = URI.parse("http://#{ host }")
-          @env['SERVER_NAME'] = uri.host
-          @env['SERVER_PORT'] = uri.port.to_s
-        end
+
+        set_server_vars
+      end
+
+      def set_server_vars
+        return unless host = @env['HTTP_HOST']
+
+        uri = URI.parse("http://#{ host }")
+        @env['SERVER_NAME'] = uri.host
+        @env['SERVER_PORT'] = uri.port.to_s
+      rescue URI::InvalidURIError
+        error
       end
     end
 
