@@ -1,3 +1,7 @@
+### 0.8.2 / 2026-06-23
+
+- Gracefully handle malformed `Host` headers in the `Server` driver
+
 ### 0.8.1 / 2026-06-04
 
 - Close a draft-75/76 connection if a length header grows to exceed the
