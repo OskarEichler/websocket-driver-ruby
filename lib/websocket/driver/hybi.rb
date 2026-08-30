@@ -243,6 +243,16 @@ module WebSocket
           raise ProtocolError.new('Missing handshake request header: Sec-WebSocket-Key')
         end
 
+        begin
+          valid_key = Base64.strict_decode64(sec_key).bytesize == 16
+        rescue ArgumentError
+          valid_key = false
+        end
+
+        unless valid_key
+          raise ProtocolError.new('Invalid handshake request header: Sec-WebSocket-Key')
+        end
+
         @headers['Upgrade']              = 'websocket'
         @headers['Connection']           = 'Upgrade'
         @headers['Sec-WebSocket-Accept'] = Hybi.generate_accept(sec_key)
