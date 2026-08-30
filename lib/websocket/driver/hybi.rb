@@ -328,6 +328,15 @@ module WebSocket
         @frame.length = buffer.unpack(PACK_FORMATS[buffer.bytesize]).first
         @stage = @frame.masked ? 3 : 4
 
+        if (buffer.bytesize == 2 && @frame.length < 126) ||
+           (buffer.bytesize == 8 && @frame.length < 65_536)
+          return fail(:protocol_error, 'Received frame with non-minimal length encoding')
+        end
+
+        if buffer.bytesize == 8 && (buffer.getbyte(0) & MASK) == MASK
+          return fail(:protocol_error, 'Received frame with invalid 64-bit length')
+        end
+
         unless MESSAGE_OPCODES.include?(@frame.opcode) or @frame.length <= 125
           return fail(:protocol_error, "Received control frame having too long payload: #{ @frame.length }")
         end
