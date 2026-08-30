@@ -55,8 +55,10 @@ module WebSocket
 
       def parse(chunk)
         chunk.each_byte do |octet|
-          @size += 1
-          return error if @size > MAX_REQUEST_SIZE
+          if @stage < 2
+            @size += 1
+            return error if @size > MAX_REQUEST_SIZE
+          end
 
           if octet == LF and @stage < 2
             @buffer.pop if @buffer.last == CR
