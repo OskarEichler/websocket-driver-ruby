@@ -63,7 +63,7 @@ module WebSocket
         @stage           = 0
         @masking         = options[:masking]
         @protocols       = options[:protocols] || []
-        @protocols       = @protocols.strip.split(/ *, */) if String === @protocols
+        @protocols       = @protocols.strip.split(/[ \t]*,[ \t]*/) if String === @protocols
         @require_masking = options[:require_masking]
         @ping_callbacks  = {}
 
@@ -72,7 +72,7 @@ module WebSocket
         return unless @socket.respond_to?(:env)
 
         if protos = @socket.env['HTTP_SEC_WEBSOCKET_PROTOCOL']
-          protos = protos.split(/ *, */) if String === protos
+          protos = protos.split(/[ \t]*,[ \t]*/) if String === protos
           @protocol = protos.find { |p| @protocols.include?(p) }
         else
           @protocol = nil
