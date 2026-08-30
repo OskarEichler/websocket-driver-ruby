@@ -12,6 +12,7 @@ module WebSocket
 
       def put(chunk)
         return unless chunk and chunk.bytesize > 0
+        chunk = chunk.dup if chunk.frozen?
         @buffer << chunk.force_encoding(Encoding::BINARY)
       end
 
