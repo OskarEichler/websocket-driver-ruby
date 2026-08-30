@@ -240,7 +240,7 @@ module WebSocket
       upgrade    = env['HTTP_UPGRADE']    || ''
 
       env['REQUEST_METHOD'] == 'GET' and
-      connection.downcase.split(/ *, */).include?('upgrade') and
+      connection.downcase.split(/[ \t]*,[ \t]*/).include?('upgrade') and
       upgrade.downcase == 'websocket'
     end
 
