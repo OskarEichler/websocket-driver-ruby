@@ -322,6 +322,10 @@ module WebSocket
         if @require_masking and not @frame.masked
           return fail(:unacceptable, 'Received unmasked frame but masking is required')
         end
+
+        if @masking and @frame.masked
+          return fail(:protocol_error, 'Received masked frame but masking is forbidden')
+        end
       end
 
       def parse_extended_length(buffer)
