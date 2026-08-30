@@ -111,7 +111,7 @@ module WebSocket
 
         if connection == ''
           return fail_handshake("'Connection' header is missing")
-        elsif connection.downcase != 'upgrade'
+        elsif !connection.downcase.split(/[ \t]*,[ \t]*/).include?('upgrade')
           return fail_handshake("'Connection' header value is not 'Upgrade'")
         end
 
