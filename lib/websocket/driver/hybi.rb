@@ -131,8 +131,9 @@ module WebSocket
       end
 
       def ping(message = '', &callback)
-        @ping_callbacks[message] = callback if callback
-        frame(message, :ping)
+        sent = frame(message, :ping)
+        @ping_callbacks[message] = callback if sent && callback
+        sent
       end
 
       def pong(message = '')
@@ -171,6 +172,10 @@ module WebSocket
         message.rsv1 = message.rsv2 = message.rsv3 = false
         message.opcode = OPCODES[type]
         message.data = payload
+
+        if !MESSAGE_OPCODES.include?(message.opcode) && payload.bytesize > 125
+          raise ArgumentError, 'Control frame payload cannot exceed 125 bytes'
+        end
 
         if MESSAGE_OPCODES.include?(message.opcode)
           message = @extensions.process_outgoing_message(message)
