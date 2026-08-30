@@ -46,7 +46,10 @@ module WebSocket
         :policy_violation     => 1008,
         :too_large            => 1009,
         :extension_error      => 1010,
-        :unexpected_condition => 1011
+        :unexpected_condition => 1011,
+        :service_restart      => 1012,
+        :try_again_later      => 1013,
+        :bad_gateway          => 1014
       }
 
       ERROR_CODES        = ERRORS.values
