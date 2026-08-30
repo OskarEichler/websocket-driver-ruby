@@ -33,7 +33,7 @@ module WebSocket
       #                      / DIGIT / ALPHA
       #                      ; any VCHAR, except delimiters
 
-      HEADER_LINE = /^([!#\$%&'\*\+\-\.\^_`\|~0-9a-z]+):\s*([\x20-\x7e]*?)\s*$/i
+      HEADER_LINE = /^([!#\$%&'\*\+\-\.\^_`\|~0-9a-z]+):\s*([\x09\x20-\x7e]*?)\s*$/i
 
       attr_reader :headers
 
