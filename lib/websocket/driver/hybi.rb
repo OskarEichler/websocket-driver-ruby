@@ -89,6 +89,8 @@ module WebSocket
       end
 
       def parse(chunk)
+        return if @ready_state == 3
+
         @reader.put(chunk)
         buffer = true
         while buffer
@@ -259,6 +261,7 @@ module WebSocket
 
       def shutdown(code, reason, error = false)
         @frame = @message = nil
+        @reader = StreamReader.new
         @stage = 5
         @extensions.close
 
